@@ -25,6 +25,7 @@ export default function RootLayout({
             <nav className="text-sm text-muted flex gap-6">
               <a href="/" className="hover:text-ink">Home</a>
               <a href="/featured" className="hover:text-ink">Featured</a>
+              <a href="/compare" className="hover:text-ink">Compare</a>
               <a href="/upload" className="hover:text-ink">Upload</a>
               <a
                 href="https://github.com/kwad77/stoa/blob/main/docs/GALLERY-SPEC.md"

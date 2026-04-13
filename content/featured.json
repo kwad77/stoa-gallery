@@ -4,6 +4,14 @@
   "curator": "kwad77",
   "runs": [
     {
+      "runId": "01KTHENIGHTWEBUILTGALLERY",
+      "title": "The night we built Gallery — 8 iters, $0.22, this very app",
+      "blurb": "Gallery replaying its own birth. The overnight Stoa session that shipped this app, captured as a real orchestra run. Every merge_sha is a real git commit, every diff is an excerpt from this repo. Scrubbable. Forkable. A little weird.",
+      "tags": ["meta", "orchestra", "ouroboros", "featured"],
+      "featured_on": "2026-04-13",
+      "curator": "kwad77"
+    },
+    {
       "runId": "01KGALLERYDEMO00000000ORDO",
       "title": "Add gzip compression to an API route (3 iter orchestra)",
       "blurb": "Canonical orchestra demo. Surveyor maps the request path, Author writes the middleware, Auditor reviews the test. Finishes in ~90s for $0.019 across three models. Good intro to orchestra mode.",
