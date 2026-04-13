@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+dist/
+
+# Local run store. Each uploaded .ordo-run archive lives here as
+# <.runs>/<run-id>/{archive.ordo-run, manifest.json, events.ndjson, ...}.
+# Kept out of git so the repo stays clean; seeded demo runs can be
+# regenerated via `pnpm seed:demo`.
+.runs/
+
+# Local family-events log emitted by the upload route.
+evidence/
+
+# Env / editor.
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+*.log
+.DS_Store

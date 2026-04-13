@@ -1,0 +1,124 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://stoa.dev/schema/scp/v1/handoff-store.json"
+title: "HandoffStoreManifestEntry (SCP v1)"
+description: >
+  One row in a handoff-store's manifest.jsonl. The store itself is a
+  directory (conventionally rooted at `<run-evidence>/store/`) where
+  content is addressable by sha256. Each `put` operation appends one
+  row matching this schema to manifest.jsonl. Producers and consumers
+  of the slot read this file to discover what's stored without opening
+  every content blob.
+
+  The three wire operations — `put`, `get`, `list` — are not defined in
+  JSON Schema form because the store is a filesystem artifact (SCP
+  `kind: artifact`, `transport: file`), not an RPC surface. A producer
+  implements the ops as filesystem writes; a consumer implements them
+  as filesystem reads. This schema defines the durable shape they
+  exchange.
+
+type: object
+additionalProperties: false
+required: [id, content_type, size_bytes, created_at, producer]
+
+properties:
+  id:
+    type: string
+    description: >
+      Canonical identifier. SHA-256 of the content, formatted as
+      `sha256:<64-lowercase-hex>`. Deterministic across producers for
+      identical content.
+    pattern: "^sha256:[0-9a-f]{64}$"
+
+  content_type:
+    type: string
+    description: >
+      Closed enum for v0.1. Extend via the additive amendment path.
+    enum:
+      - text/plain
+      - text/markdown
+      - text/diff
+      - text/code
+      - application/json
+
+  size_bytes:
+    type: integer
+    minimum: 0
+    description: "Byte length of the stored content (pre-compression, if any)."
+
+  created_at:
+    type: string
+    format: date-time
+    description: "ISO 8601 UTC timestamp of the put operation."
+
+  producer:
+    type: object
+    description: >
+      The agent / component that produced the content. Mirrors the SCP
+      envelope's provenance block but is required here — the store is
+      the audit trail for cross-agent handoffs.
+    additionalProperties: false
+    required: [component]
+    properties:
+      component:
+        type: string
+        pattern: "^[a-z][a-z0-9-]{0,62}$"
+        description: "Emitting component's metadata.name."
+      role:
+        type: string
+        description: >
+          Role within the orchestration wave, e.g. Surveyor, Author,
+          Auditor, Synthesizer. Free-form; conventions are the
+          orchestrator's.
+      agent:
+        type: string
+        description: "Agent / model identifier at time of production."
+      model:
+        type: string
+        description: "Provider-specific model identifier if distinct from agent."
+      provider:
+        type: string
+        description: "LLM provider, if relevant."
+      instance:
+        type: string
+        description: >
+          Opaque identifier distinguishing one agent instance from
+          another within the same run (e.g. parallel iters with the
+          same role). Optional.
+
+  tags:
+    type: array
+    description: >
+      Non-unique semantic labels. `list({tag: X})` returns every entry
+      carrying X. Common patterns: `summary`, `diff`, `finding`,
+      `language:python`, `iter:i-3`.
+    items:
+      type: string
+      pattern: "^[a-z][a-z0-9:._-]{0,62}$"
+    uniqueItems: true
+
+  references:
+    type: array
+    description: >
+      IDs of prior store entries this entry depends on or extends.
+      Enables the orchestrator to reconstruct handoff chains without
+      re-parsing content. Optional but encouraged for audit.
+    items:
+      type: string
+      pattern: "^sha256:[0-9a-f]{64}$"
+    uniqueItems: true
+
+  content_location:
+    type: string
+    description: >
+      Relative path from the store root to the content blob.
+      Conventionally `<first-2-hex>/<rest-62-hex>`. Explicit in the
+      manifest so alternative layouts don't break consumers.
+    pattern: "^[0-9a-f]{2}/[0-9a-f]{62}$"
+
+  digest_verified:
+    type: boolean
+    description: >
+      Set true when the producing runtime has re-hashed the content
+      and confirmed it matches `id`. Consumers MAY re-verify; stores
+      SHOULD set this to true on put and leave it false only on
+      intentionally corrupt fixtures.

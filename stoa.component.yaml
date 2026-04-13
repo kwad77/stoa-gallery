@@ -1,0 +1,32 @@
+apiVersion: stoa/v1
+kind: Component
+metadata:
+  name: gallery
+  version: 0.1.0-local
+  description: Shareable replays of Ordo runs. Upload a .ordo-run, get a URL.
+spec:
+  describe:
+    command: node scripts/stoa-describe.mjs
+    timeoutMs: 2000
+  consumes:
+  - slot: ordo-run-archive
+    version: '>=0.1 <0.2'
+  - slot: handoff-store
+    version: '>=0.1 <0.2'
+  produces:
+  - slot: family-events
+    version: '1.0'
+    namespace: gallery
+    endpoint: events
+  - slot: ui-surface
+    version: '1.0'
+  endpoints:
+  - name: events
+    transport: file
+    path: ./evidence/family-events.ndjson
+  requires:
+    family: '>=0.1'
+    capabilities:
+    - filesystem
+    - network
+    - persistent-storage

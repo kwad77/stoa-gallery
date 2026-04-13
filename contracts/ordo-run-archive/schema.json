@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ordo.dev/schemas/ordo-run-archive/manifest.json",
+  "title": "OrdoRunArchiveManifest",
+  "description": "Self-description for an .ordo-run archive, lives at the archive root as manifest.json. Authored in Ordo (github.com/kwad77/ordo), mirrored into Stoa under contracts/ordo-run-archive/ per D-002. See docs/ORDO-RUN-ARCHIVE.md for the prose spec.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format_version",
+    "ordo_version",
+    "run_id",
+    "legacy_run_id",
+    "created_at",
+    "iter_count",
+    "total_cost_usd",
+    "prompt",
+    "sha256_of_contents",
+    "contents"
+  ],
+  "properties": {
+    "format_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver of the .ordo-run format itself. Tracked independently of Ordo's version. This doc defines 0.1.0."
+    },
+    "ordo_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$",
+      "description": "stoa.component.yaml metadata.version at the time the archive was written."
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$",
+      "description": "SCP ULID. Matches envelope.runId on every event inside events.ndjson."
+    },
+    "legacy_run_id": {
+      "type": "string",
+      "pattern": "^r-\\d{4}-\\d{2}-\\d{2}-\\d{3,}$",
+      "description": "Ordo's human-readable run id used under evidence/<date>/<run-id>/ on disk."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of archive creation."
+    },
+    "iter_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_cost_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "planner_model": {
+      "type": "string",
+      "description": "Provider-specific model identifier used by the planner iter. Optional — absent when the plan was hand-authored."
+    },
+    "models_used": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Distinct provider model identifiers seen across all iters. Sorted alphabetically."
+    },
+    "providers_used": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Distinct provider slugs (claude, gemini, codex) seen across all iters. Sorted alphabetically."
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The user's original prompt, stored verbatim for display + search."
+    },
+    "sha256_of_contents": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the concatenation of every contents[].sha256 string in the order listed. Detects tampering without re-hashing every entry."
+    },
+    "contents": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Archive-root-relative, forward-slash, UTF-8."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Optional. Writer-computed; consumers MAY verify."
+          }
+        }
+      }
+    }
+  }
+}

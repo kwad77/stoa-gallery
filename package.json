@@ -1,0 +1,41 @@
+{
+  "name": "gallery",
+  "version": "0.1.0-local",
+  "private": true,
+  "description": "Local-first replay UI for .ordo-run archives. Third SCP family component.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "stoa:describe": "node scripts/stoa-describe.mjs",
+    "stoa:verify": "python ../stoa/dist/stoa.pyz verify .",
+    "stoa:bundle": "python ../stoa/dist/stoa.pyz bundle-contracts --target .",
+    "seed:demo": "node scripts/seed-demo-run.mjs"
+  },
+  "dependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "clsx": "^2.1.1",
+    "js-yaml": "^4.1.1",
+    "jszip": "^3.10.1",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.11",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
