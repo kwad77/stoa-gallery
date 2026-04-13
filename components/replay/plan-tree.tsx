@@ -3,6 +3,8 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
+import { fileUrl } from "@/lib/client-paths";
+
 interface Props {
   runId: string;
   files: string[];
@@ -23,7 +25,7 @@ export function PlanTree({ runId, files }: Props) {
     const planFile = files.find((f) => /plan(\.json)?$/.test(f));
     if (!planFile) return;
     (async () => {
-      const res = await fetch(`/api/runs/${runId}/file?p=${encodeURIComponent(planFile)}`);
+      const res = await fetch(fileUrl(runId, planFile));
       if (!res.ok) return;
       const text = await res.text();
       setRaw(text);

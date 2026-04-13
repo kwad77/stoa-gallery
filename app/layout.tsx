@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,16 +18,16 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg text-ink">
         <header className="border-b border-border">
           <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-            <a href="/" className="font-mono text-lg tracking-tight">
+            <Link href="/" className="font-mono text-lg tracking-tight">
               <span className="text-accent">stoa</span>
               <span className="text-muted"> / </span>
               <span>gallery</span>
-            </a>
+            </Link>
             <nav className="text-sm text-muted flex gap-6">
-              <a href="/" className="hover:text-ink">Home</a>
-              <a href="/featured" className="hover:text-ink">Featured</a>
-              <a href="/compare" className="hover:text-ink">Compare</a>
-              <a href="/upload" className="hover:text-ink">Upload</a>
+              <Link href="/" className="hover:text-ink">Home</Link>
+              <Link href="/featured" className="hover:text-ink">Featured</Link>
+              <Link href="/compare" className="hover:text-ink">Compare</Link>
+              <Link href="/upload" className="hover:text-ink">Upload</Link>
               <a
                 href="https://github.com/kwad77/stoa/blob/main/docs/GALLERY-SPEC.md"
                 className="hover:text-ink"

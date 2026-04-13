@@ -3,7 +3,31 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { isStaticBuild } from "@/lib/client-paths";
+
 export default function UploadPage() {
+  if (isStaticBuild) {
+    return (
+      <div className="max-w-xl space-y-4">
+        <h1 className="text-2xl font-semibold tracking-tight">Uploads disabled in static mode</h1>
+        <p className="text-sm text-muted">
+          This instance is the GitHub Pages static showcase — pre-rendered
+          runs only. To upload your own <code className="font-mono text-accent">.ordo-run</code>{" "}
+          archive, run Gallery locally (<code className="font-mono">npm run dev</code>) or
+          deploy the Fly version per <a className="text-accent underline" href="https://github.com/kwad77/stoa-gallery/blob/main/DEPLOY.md">DEPLOY.md</a>.
+        </p>
+        <p className="text-xs font-mono text-muted">
+          Once you have an SSR instance running, set <code className="text-accent">ORDO_GALLERY_URL</code> on your
+          machine and every{" "}
+          <code className="text-accent">ordo gallery share</code> will publish there.
+        </p>
+      </div>
+    );
+  }
+  return <UploadForm />;
+}
+
+function UploadForm() {
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

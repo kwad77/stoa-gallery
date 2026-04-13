@@ -1,10 +1,24 @@
 import { notFound } from "next/navigation";
+import fs from "node:fs/promises";
 
 import { loadManifest, readRunFile } from "@/lib/store";
+import { IS_STATIC, RUNS_DIR } from "@/lib/paths";
 import { parseNdjson, type OrdoEvent } from "@/lib/events";
 import { CompareView } from "@/components/compare/compare-view";
 
-export const dynamic = "force-dynamic";
+export const dynamic = IS_STATIC ? "force-static" : "force-dynamic";
+
+export async function generateStaticParams() {
+  try {
+    const entries = await fs.readdir(RUNS_DIR, { withFileTypes: true });
+    const ids = entries.filter((e) => e.isDirectory()).map((e) => e.name);
+    const out: { a: string; b: string }[] = [];
+    for (const a of ids) for (const b of ids) if (a !== b) out.push({ a, b });
+    return out;
+  } catch {
+    return [];
+  }
+}
 
 export default async function ComparePairPage({
   params

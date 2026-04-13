@@ -1,12 +1,29 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 import { listRunFiles, loadManifest } from "@/lib/store";
-import { PUBLIC_BASE_URL } from "@/lib/paths";
+import { PUBLIC_BASE_URL, RUNS_DIR, IS_STATIC, BASE_PATH } from "@/lib/paths";
 import { ReplayClient } from "@/components/replay/replay-client";
 import { ForkButton } from "@/components/replay/fork-button";
 
-export const dynamic = "force-dynamic";
+export const dynamic = IS_STATIC ? "force-static" : "force-dynamic";
+
+/**
+ * Enumerate run IDs at build time for `output: 'export'`. In dev mode
+ * Next also calls this but pads with runtime-added runs.
+ */
+export async function generateStaticParams() {
+  try {
+    const entries = await fs.readdir(RUNS_DIR, { withFileTypes: true });
+    return entries
+      .filter((e) => e.isDirectory())
+      .map((e) => ({ id: e.name }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params
@@ -20,6 +37,9 @@ export async function generateMetadata({
     manifest.iter_count === 1 ? "" : "s"
   }, $${manifest.total_cost_usd.toFixed(4)}, ordo ${manifest.ordo_version}. Scrub through the orchestra timeline, plan tree, and diffs.`;
   const url = `${PUBLIC_BASE_URL}/run/${params.id}`;
+  const ogImage = IS_STATIC
+    ? `${BASE_PATH}/runs/${params.id}/og.svg`
+    : `/run/${params.id}/opengraph-image`;
   return {
     title,
     description,
@@ -28,12 +48,14 @@ export async function generateMetadata({
       description,
       url,
       siteName: "Gallery · Stoa",
-      type: "article"
+      type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }]
     },
     twitter: {
       card: "summary_large_image",
       title,
-      description
+      description,
+      images: [ogImage]
     }
   };
 }

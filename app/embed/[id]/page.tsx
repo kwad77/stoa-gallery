@@ -1,9 +1,20 @@
 import { notFound } from "next/navigation";
+import fs from "node:fs/promises";
 
 import { listRunFiles, loadManifest } from "@/lib/store";
+import { IS_STATIC, RUNS_DIR } from "@/lib/paths";
 import { ReplayClient } from "@/components/replay/replay-client";
 
-export const dynamic = "force-dynamic";
+export const dynamic = IS_STATIC ? "force-static" : "force-dynamic";
+
+export async function generateStaticParams() {
+  try {
+    const entries = await fs.readdir(RUNS_DIR, { withFileTypes: true });
+    return entries.filter((e) => e.isDirectory()).map((e) => ({ id: e.name }));
+  } catch {
+    return [];
+  }
+}
 
 /**
  * Embed mode — no global chrome, minimal header, intended for iframe

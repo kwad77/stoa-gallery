@@ -2,8 +2,9 @@ import { listRuns } from "@/lib/store";
 import Link from "next/link";
 
 import { HeroAnimation } from "@/components/landing/hero-animation";
+import { IS_STATIC } from "@/lib/paths";
 
-export const dynamic = "force-dynamic";
+export const dynamic = IS_STATIC ? "force-static" : "force-dynamic";
 
 export default async function Home() {
   const runs = await listRuns();

@@ -2,7 +2,7 @@ import Link from "next/link";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { REPO_ROOT } from "@/lib/paths";
+import { REPO_ROOT, IS_STATIC } from "@/lib/paths";
 
 interface FeaturedEntry {
   runId: string;
@@ -19,7 +19,7 @@ export const metadata = {
     "Hand-curated Ordo runs worth watching. Every entry is a scrub-able replay with a one-click fork."
 };
 
-export const dynamic = "force-dynamic";
+export const dynamic = IS_STATIC ? "force-static" : "force-dynamic";
 
 async function loadFeatured(): Promise<FeaturedEntry[]> {
   try {

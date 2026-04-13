@@ -7,12 +7,20 @@ import path from "node:path";
  * production with a persistent volume, with zero code changes.
  */
 export const REPO_ROOT = process.cwd();
+export const IS_STATIC = process.env.NEXT_PUBLIC_GALLERY_STATIC === "1";
+export const BASE_PATH = process.env.GALLERY_BASE_PATH || "";
 
 /** Root for all runtime-persistent state. Overridable in prod. */
 export const DATA_ROOT = process.env.GALLERY_DATA_DIR || REPO_ROOT;
 
-/** Where unpacked .ordo-run archives live. */
-export const RUNS_DIR = path.join(DATA_ROOT, ".runs");
+/**
+ * Where unpacked .ordo-run archives live. In static mode the prebuild
+ * script has copied them under public/runs/ so Next's static export can
+ * emit them as public assets.
+ */
+export const RUNS_DIR = IS_STATIC
+  ? path.join(REPO_ROOT, "public", "runs")
+  : path.join(DATA_ROOT, ".runs");
 
 /** Vendored slot schemas (written by `stoa bundle-contracts`). */
 export const CONTRACTS_DIR = path.join(REPO_ROOT, "contracts");

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import clsx from "clsx";
 
+import { fileUrl } from "@/lib/client-paths";
+
 interface Props {
   runId: string;
   files: string[];
@@ -36,7 +38,7 @@ function DiffRow({ runId, path }: { runId: string; path: string }) {
 
   async function toggle() {
     if (!open && body === null) {
-      const res = await fetch(`/api/runs/${runId}/file?p=${encodeURIComponent(path)}`);
+      const res = await fetch(fileUrl(runId, path));
       setBody(res.ok ? await res.text() : `error: ${res.status}`);
     }
     setOpen(!open);

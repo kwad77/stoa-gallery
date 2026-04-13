@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { parseNdjson, type OrdoEvent } from "@/lib/events";
 import type { ArchiveManifest } from "@/lib/archive";
+import { eventsUrl } from "@/lib/client-paths";
 import { Timeline } from "./timeline";
 import { Scrubber } from "./scrubber";
 import { PlanTree } from "./plan-tree";
@@ -26,7 +27,7 @@ export function ReplayClient({ runId, manifest, files }: Props) {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`/api/runs/${runId}/events`);
+        const res = await fetch(eventsUrl(runId));
         if (!res.ok) {
           setError(`events.ndjson: ${res.status}`);
           return;

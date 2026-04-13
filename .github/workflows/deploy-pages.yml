@@ -1,0 +1,60 @@
+name: Deploy Gallery to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Seed all fixtures (demo + featured + ouroboros)
+        run: npm run seed:all
+
+      - name: Static build
+        run: npm run build:static
+        env:
+          # NEXT_PUBLIC_GALLERY_BASE_PATH defaults to /stoa-gallery
+          # which matches kwad77.github.io/stoa-gallery. Override if
+          # publishing to a custom domain (e.g. gallery.stoa.dev).
+          NEXT_PUBLIC_GALLERY_BASE_PATH: /stoa-gallery
+          GALLERY_PUBLIC_URL: https://kwad77.github.io/stoa-gallery
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
