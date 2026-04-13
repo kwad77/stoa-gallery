@@ -12,7 +12,9 @@
     "stoa:describe": "node scripts/stoa-describe.mjs",
     "stoa:verify": "python ../stoa/dist/stoa.pyz verify .",
     "stoa:bundle": "python ../stoa/dist/stoa.pyz bundle-contracts --target .",
-    "seed:demo": "node scripts/seed-demo-run.mjs"
+    "seed:demo": "node scripts/seed-demo-run.mjs",
+    "seed:featured": "node scripts/seed-featured.mjs",
+    "seed:all": "node scripts/seed-demo-run.mjs && node scripts/seed-featured.mjs"
   },
   "dependencies": {
     "@types/js-yaml": "^4.0.9",

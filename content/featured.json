@@ -1,0 +1,31 @@
+{
+  "schema_version": "0.1",
+  "updated_at": "2026-04-13",
+  "curator": "kwad77",
+  "runs": [
+    {
+      "runId": "01KGALLERYDEMO00000000ORDO",
+      "title": "Add gzip compression to an API route (3 iter orchestra)",
+      "blurb": "Canonical orchestra demo. Surveyor maps the request path, Author writes the middleware, Auditor reviews the test. Finishes in ~90s for $0.019 across three models. Good intro to orchestra mode.",
+      "tags": ["orchestra", "demo", "api", "3-iter"],
+      "featured_on": "2026-04-13",
+      "curator": "kwad77"
+    },
+    {
+      "runId": "01KFEATUREREFACTOR000000001",
+      "title": "Strip React 18 ReactDOM.render() calls, switch to createRoot",
+      "blurb": "Single-iter refactor across 23 files. Uses the react-18-to-19 plan template (first starter Stoa shipped). Auditor catches two test files that needed updating but weren't auto-rewritten. Fork to run on your own codebase.",
+      "tags": ["refactor", "react", "plan-template", "single-iter"],
+      "featured_on": "2026-04-13",
+      "curator": "kwad77"
+    },
+    {
+      "runId": "01KFEATUREDOCS000000000DEMO",
+      "title": "Generate API docs from Go source — 1 LLM call, 14 files updated",
+      "blurb": "Uses the docs-from-code plan template. Planner sets a tight budget ($0.08), Author drafts markdown sibling to each .go file, Synthesizer stitches them into a nav-able docs tree. Good example of a cost-bounded run with a small roster.",
+      "tags": ["docs", "plan-template", "cost-bounded", "golang"],
+      "featured_on": "2026-04-13",
+      "curator": "kwad77"
+    }
+  ]
+}
